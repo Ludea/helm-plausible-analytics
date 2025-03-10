@@ -23,8 +23,3 @@ dependencies:
     version: 12.8.2
     repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
-  - name: clickhouse
-    alias: clickhouse
-    version: 3.6.7
-    repository: https://charts.bitnami.com/bitnami
-    condition: clickhouse.enabled

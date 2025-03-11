@@ -42,6 +42,5 @@ jobs:
           helm install clickhouse altinity/clickhouse --namespace clickhouse --create-namespace
           helm install cnpg --namespace cnpg-system --create-namespace cnpg/cloudnative-pg --wait
           helm install database --namespace database --create-namespace cnpg/cluster --wait
-          sudo kubectl get svc -n database
       - name: Run chart-testing (install)
         run: ct install --chart-dirs chart/ --charts chart/ --debug

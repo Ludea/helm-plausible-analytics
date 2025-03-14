@@ -42,9 +42,6 @@ jobs:
           helm install clickhouse altinity/clickhouse --namespace clickhouse --create-namespace
           helm install cnpg --namespace cnpg-system --create-namespace cnpg/cloudnative-pg --wait
           helm install database --namespace database --create-namespace cnpg/cluster --set cluster.initdb.owner=foo --wait
-      - run: |
-          kubectl describe cluster -n database database 
-          kubectl get secrets -n database
-          kubectl get secret -n database database-cluster-app -o jsonpath="{.data.password}" | base64 --decode
+      - run: echo "POSTGRESQL_PASSWORD=$(kubectl get secret -n database database-cluster-app -o jsonpath="{.data.password}" | base64 --decode)" >> $GITHUB_ENV
       - name: Run chart-testing (install)
         run: ct install --chart-dirs chart/ --charts chart/ --debug

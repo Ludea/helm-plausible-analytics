@@ -45,6 +45,6 @@ jobs:
       - run: |
           kubectl describe cluster -n database database 
           kubectl get secrets -n database
-          kubectl describe -n database secret database-cluster-app
+          kubectl get secret -n database database-cluster-app -o jsonpath="{.data.password}" | base64 --decode
       - name: Run chart-testing (install)
         run: ct install --chart-dirs chart/ --charts chart/ --debug

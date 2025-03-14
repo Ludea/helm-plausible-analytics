@@ -41,9 +41,10 @@ jobs:
           helm install clickhouse-operator clickhouse-operator/altinity-clickhouse-operator
           helm install clickhouse altinity/clickhouse --namespace clickhouse --create-namespace
           helm install cnpg --namespace cnpg-system --create-namespace cnpg/cloudnative-pg --wait
-          helm install database --namespace database --create-namespace cnpg/cluster --set cluster.initdb.owner=foo --wait
+          helm install database --namespace database --create-namespace cnpg/cluster --set cluster.initdb.owner=foo --set cluster.initdb.secret.name=database-cluster-foo --wait
       - run: |
           kubectl describe cluster -n database database 
           kubectl get secrets -n database
+          kubectl describe -n database secret database-cluster-foo
       - name: Run chart-testing (install)
         run: ct install --chart-dirs chart/ --charts chart/ --debug

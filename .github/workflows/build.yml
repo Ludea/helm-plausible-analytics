@@ -43,6 +43,6 @@ jobs:
           helm install cnpg --namespace cnpg-system --create-namespace cnpg/cloudnative-pg --wait
           helm install database --namespace database --create-namespace cnpg/cluster --set cluster.initdb.owner=foo --wait
       - run: echo "POSTGRESQL_PASSWORD=$(kubectl get secret -n database database-cluster-app -o jsonpath="{.data.password}" | base64 --decode)" >> $GITHUB_ENV
-      - run: kubectl get svc -n clickhouse 
+      - run: kubectl get svc --all-namespaces
       - name: Run chart-testing (install)
         run: ct install --chart-dirs chart/ --charts chart/ --debug --helm-extra-set-args "--set=databaseURL=postgres://foo:${{ env.POSTGRESQL_PASSWORD }}@database-cluster-rw.database.svc.cluster.local:5432/plausible_db --set=clickhouseDatabaseURL=http://clickhouse-service.clickhouse.svc.cluster.local:9000/plausible_events_db"

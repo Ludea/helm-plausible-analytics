@@ -39,7 +39,7 @@ jobs:
           helm repo add cnpg https://cloudnative-pg.github.io/charts
           helm repo update
           helm install clickhouse-operator clickhouse-operator/altinity-clickhouse-operator --namespace clickhouse --create-namespace --wait
-          helm install clickhouse altinity/clickhouse --namespace clickhouse --create-namespace --set operator.enable=false --set clickhouse.allowExternalAccess=true --wait
+          helm install clickhouse altinity/clickhouse --namespace clickhouse --create-namespace --set operator.enable=false --set clickhouse.defaultUser.password=foo --set clickhouse.defaultUser.hostIP: 10.0.0.0/8 --wait
           helm install cnpg --namespace cnpg-system --create-namespace cnpg/cloudnative-pg --wait
           helm install database --namespace database --create-namespace cnpg/cluster --set cluster.initdb.owner=foo --wait
       - run: echo "POSTGRESQL_PASSWORD=$(kubectl get secret -n database database-cluster-app -o jsonpath="{.data.password}" | base64 --decode)" >> $GITHUB_ENV
@@ -48,4 +48,4 @@ jobs:
       - run: kubectl get pods -n clickhouse
 #      - run: kubectl wait --for=condition=Ready pod -n clickhouse -l clickhouse.altinity.com/chi=clickhouse --timeout=300s
       - name: Run chart-testing (install)
-        run: ct install --chart-dirs chart/ --charts chart/ --debug --helm-extra-set-args "--set=databaseURL=postgres://foo:${{ env.POSTGRESQL_PASSWORD }}@database-cluster-rw.database.svc.cluster.local:5432/plausible_db --set=clickhouseDatabaseURL=http://foo@clickhouse-clickhouse.clickhouse.svc.cluster.local:8123/plausible_events_db"
+        run: ct install --chart-dirs chart/ --charts chart/ --debug --helm-extra-set-args "--set=databaseURL=postgres://foo:${{ env.POSTGRESQL_PASSWORD }}@database-cluster-rw.database.svc.cluster.local:5432/plausible_db --set=clickhouseDatabaseURL=http://foo:foo@clickhouse-clickhouse.clickhouse.svc.cluster.local:8123/plausible_events_db"

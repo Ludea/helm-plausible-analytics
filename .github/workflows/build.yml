@@ -44,8 +44,5 @@ jobs:
           helm install database --namespace database --create-namespace cnpg/cluster --set cluster.initdb.owner=foo --wait
       - run: echo "POSTGRESQL_PASSWORD=$(kubectl get secret -n database database-cluster-app -o jsonpath="{.data.password}" | base64 --decode)" >> $GITHUB_ENV
       - run: kubectl wait --for=jsonpath='{.status.status}'=Completed chi -n clickhouse clickhouse --timeout=500s 
-      - run: kubectl get svc -n clickhouse 
-      - run: kubectl get pods -n clickhouse
-#      - run: kubectl wait --for=condition=Ready pod -n clickhouse -l clickhouse.altinity.com/chi=clickhouse --timeout=300s
       - name: Run chart-testing (install)
-        run: ct install --chart-dirs chart/ --charts chart/ --debug --helm-extra-set-args "--set=databaseURL=postgres://foo:${{ env.POSTGRESQL_PASSWORD }}@database-cluster-rw.database.svc.cluster.local:5432/plausible_db --set=clickhouseDatabaseURL=http://default:foo@clickhouse-clickhouse.clickhouse.svc.cluster.local:8123/plausible_events_db"
+        run: ct install --chart-dirs chart/ --charts chart/ --debug --helm-extra-args "--timeout 700s" --helm-extra-set-args "--set=databaseURL=postgres://foo:${{ env.POSTGRESQL_PASSWORD }}@database-cluster-rw.database.svc.cluster.local:5432/plausible_db --set=clickhouseDatabaseURL=http://default:foo@clickhouse-clickhouse.clickhouse.svc.cluster.local:8123/plausible_events_db"

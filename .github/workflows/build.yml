@@ -43,7 +43,7 @@ jobs:
           helm install cnpg --namespace cnpg-system --create-namespace cnpg/cloudnative-pg --wait
           helm install database --namespace database --create-namespace cnpg/cluster --set cluster.initdb.owner=foo --wait
       - run: echo "POSTGRESQL_PASSWORD=$(kubectl get secret -n database database-cluster-app -o jsonpath="{.data.password}" | base64 --decode)" >> $GITHUB_ENV
-      - run: kubectl wait --for=jsonpath='{.status.status}'=Completed chi -n clickhouse clickhouse --timeout=300s 
+      - run: kubectl wait --for=jsonpath='{.status.status}'=Completed chi -n clickhouse clickhouse --timeout=500s 
       - run: kubectl get svc -n clickhouse 
       - run: kubectl get pods -n clickhouse
 #      - run: kubectl wait --for=condition=Ready pod -n clickhouse -l clickhouse.altinity.com/chi=clickhouse --timeout=300s

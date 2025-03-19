@@ -78,7 +78,7 @@ mailer:
 ## you can provide a different database
 
 extra_geolocation:
-  enabled: true  # Enable/Disable
+  enabled: false  # Enable/Disable
   maxmind:
     licenseKey: ""
     edition: ""
